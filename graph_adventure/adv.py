@@ -39,33 +39,48 @@ for exit in player.currentRoom.getExits():
     graph[player.currentRoom.id][exit] = "?"
 
 print(graph)
+# graph[previousRoom][directionToTravel] = currentRoomID
+# graph[currentRoomID][inverseDirection] = previousRoom
 
 
 def getUnexploredDirection():
     unexploredArr = []
-    for exit in player.currentRoom.getExits():
-        if exit != "?":
-            unexploredArr.append(exit)
-    if len(unexploredArr) == 0:
-        return None
+    exits = player.currentRoom.getExits()
+    if len(exits) > 0:
+        for exit in player.currentRoom.getExits():
+            if graph[player.currentRoom.id][exit] == "?":
+                unexploredArr.append(exit)
+        if len(unexploredArr) > 0:
+            random.shuffle(unexploredArr)
+            print(unexploredArr)
+            return unexploredArr[0]
     else:
-        random.shuffle(unexploredArr)
-        return unexploredArr[0]
+        return None
 
 
-print(getUnexploredDirection())
 # -----------------------------
 # PLAN:
 # -----------------------------
 # pick a room with an unexplored exit and go in that direction
-unexploredDirection = getUnexploredDirection()
-if unexploredDirection == None:
+while getUnexploredDirection() != None:
+    previousRoom = player.currentRoom.id
+    unexploredDirection = getUnexploredDirection()
+    print("unexploredDirection", unexploredDirection)
+    player.travel(unexploredDirection)
+    traversalPath.append(unexploredDirection)
+    graph[player.currentRoom.id] = {}
+    for exit in player.currentRoom.getExits():
+        graph[player.currentRoom.id][exit] = "?"
+    print("graph", graph)
+    graph[previousRoom][unexploredDirection] = player.currentRoom.id
+    graph[player.currentRoom.id][oppositeDirections[unexploredDirection]] = previousRoom
+    print("updated graph", graph)
+    print("current room", player.currentRoom.id)
+if getUnexploredDirection() == None:
     # breadthFirstSearch to find room with unexplored exits
     # move player along that path to that room
     # add each movement to the traversalPath
-    pass
-else:
-    player.travel(unexploredDirection)
+    print("unexplorable")
 
 
 # do depth first search until hitting a dead end
