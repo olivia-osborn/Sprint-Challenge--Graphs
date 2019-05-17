@@ -41,7 +41,6 @@ for exit in player.currentRoom.getExits():
 
 print(graph)
 
-
 def getUnexploredDirection():
     unexploredArr = []
     exits = player.currentRoom.getExits()
@@ -55,119 +54,31 @@ def getUnexploredDirection():
     else:
         return None
 
-# def breadth_first_for_each(self, startingRoom, cb):
-#     visited=[]
-#     cb(self.value)
-#     def helper (node, cb):
-#         nonlocal visited
-#         current_node=node
-#         if node.left is not None:
-#           cb(node.left.value)
-#           visited.append(node.left)
-#           cb(node.right.value)
-#           visited.append(node.right)
-#           helper(current_node.left,cb)
-#         if node.right is not None:
-#           if node.right not in visited:
-#             cb(node.right.value)
-#           helper(current_node.right,cb)
-#     helper(self, cb)
-
-# def bfs(startingRoom):
-#     print("startingRoom", startingRoom)
-#     # Create an empty Queue
-#     q = Queue()
-#     pathDirections = []
-#     # Create an empty Visited set
-#     visited = set()
-#     # Add a path to the starting vertex to the queue
-#     q.enqueue([startingRoom])
-#     # While the queue is not empty...
-#     while q.size() > 0:
-#         # Dequeue the first PATH
-#         path = q.dequeue()
-#         # Grab the last vertex of the path
-#         v = path[-1]
-#         # Check if that room has any unexplored exits:
-#         for exit in startingRoom.getExits():
-#             if exit == "?":
-#                 return path
-#         # If it has not been visited...
-#         if v not in visited:
-#             # mark it as visited
-#             visited.add(v)
-#             # Then enqueue PATHS to each of its neighbors in the queue
-#             for neighbor in graph[v]:
-#                 path_copy = path.copy()
-#                 path_copy.append(neighbor)
-#                 q.enqueue(path_copy)
-
-
-# -----------------------------
-# PLAN:
-# -----------------------------
-# pick a room with an unexplored exit and go in that direction
-
-
 def exploreRooms():
     q = []
     visited = [0]
     while len(visited) != len(roomGraph):
         while getUnexploredDirection() != None:
-            print("qqqqq", q)
             previousRoom = player.currentRoom.id
             unexploredDirection = getUnexploredDirection()
-            # print("unexploredDirection", unexploredDirection)
             player.travel(unexploredDirection)
             traversalPath.append(unexploredDirection)
-            # print("visited", visited)
             q.append(unexploredDirection)
             if player.currentRoom.id not in visited:
                 visited.append(player.currentRoom.id)
                 graph[player.currentRoom.id] = {}
                 for exit in player.currentRoom.getExits():
                     graph[player.currentRoom.id][exit] = "?"
-            # print("graph", graph)
             graph[previousRoom][unexploredDirection] = player.currentRoom.id
             graph[player.currentRoom.id][oppositeDirections[unexploredDirection]] = previousRoom
-            # print("updated graph", graph)
-            print("current room", player.currentRoom.id)
         if getUnexploredDirection() == None:
-            print("ifffffffffffffffffffffffffffffffffffffffffffffff")
             while getUnexploredDirection() == None and len(q) > 0:
                 player.travel(oppositeDirections[q[-1]])
                 traversalPath.append(oppositeDirections[q[-1]])
                 q.pop()
 
-
 exploreRooms()
 print("traversalpath", traversalPath)
-# do depth first search until hitting a dead end
-# do breadth first search until you hit a room with exits that contain "?"
-# go down that path using depth first search and repeat
-
-
-# -------------------------------------------------------
-# print(graph)
-
-# directionToTravel = "n"
-
-# player.travel(directionToTravel)
-
-# print(currentRoomID)
-# print(player.currentRoom.getExits())
-
-# graph[currentRoomID] = {}
-
-# for exit in player.currentRoom.getExits():
-#     graph[currentRoomID][exit] = "?"
-
-# inverseDirection = "s"
-# previousRoom = 0
-# graph[previousRoom][directionToTravel] = currentRoomID
-# graph[currentRoomID][inverseDirection] = previousRoom
-# print(currentRoomID)
-# print(player.currentRoom.getExits())
 
 # TRAVERSAL TEST
 visited_rooms = set()
